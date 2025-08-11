@@ -21,6 +21,11 @@ kotlinx-serialization = "1.8.1"
 kotlinx-serialization-plugin = "1.9.0"
 kcoordinator = "1.1.0"
 kdeeplink = "0.3.0"
+kapp-deeplink = "1.0.0"
+kapp-data = "1.0.0"
+kapp-auth = "1.0.0"
+kapp-home = "1.0.0"
+kapp-product = "1.0.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -44,6 +49,13 @@ kcoordinator = { module = "io.github.lucasferreiramachado:kcoordinator", version
 kdeeplink-navigation-compose = { module = "io.github.lucasferreiramachado:kdeeplink-navigation-compose", version.ref = "kdeeplink" }
 kdeeplink-navigation-compose-external = { module = "io.github.lucasferreiramachado:kdeeplink-navigation-compose-external", version.ref = "kdeeplink" }
 kdeeplink = { module = "io.github.lucasferreiramachado:kdeeplink", version.ref = "kdeeplink" }
+kapp-data-user = { module = "io.github.lucasferreiramachado:kapp-data-user", version.ref = "kapp-data" }
+kapp-data-purchase = { module = "io.github.lucasferreiramachado:kapp-data-purchase", version.ref = "kapp-data" }
+kapp-data-product = { module = "io.github.lucasferreiramachado:kapp-data-product", version.ref = "kapp-data" }
+kapp-deeplink = { module = "io.github.lucasferreiramachado:kapp-deeplink", version.ref = "kapp-deeplink" }
+kapp-auth = { module = "io.github.lucasferreiramachado:kapp-auth", version.ref = "kapp-auth" }
+kapp-home = { module = "io.github.lucasferreiramachado:kapp-home", version.ref = "kapp-home" }
+kapp-product = { module = "io.github.lucasferreiramachado:kapp-product", version.ref = "kapp-product" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -78,6 +78,15 @@ kotlin {
             implementation(libs.material.icons.core)
             implementation(libs.material.icons.extended)
 
+            implementation(libs.kapp.deeplink)
+            implementation(libs.kapp.data.user)
+            implementation(libs.kapp.data.product)
+            implementation(libs.kapp.data.purchase)
+
+            implementation(libs.kapp.auth)
+            implementation(libs.kapp.product)
+            implementation(libs.kapp.home)
+
             implementation(libs.kdeeplink)
             implementation(libs.kdeeplink.navigation.compose)
             api(libs.kdeeplink.navigation.compose.external)
