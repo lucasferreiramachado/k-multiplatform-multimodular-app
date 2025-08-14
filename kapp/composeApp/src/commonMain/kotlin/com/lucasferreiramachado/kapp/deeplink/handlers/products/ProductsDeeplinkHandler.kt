@@ -1,12 +1,12 @@
-package com.lucasferreiramachado.kapp.app.coordinators.deeplink.handlers.products
+package com.lucasferreiramachado.kapp.deeplink.handlers.products
 
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavBackStackEntry
-import com.lucasferreiramachado.kapp.app.coordinators.features.FeaturesCoordinatorAction
-import com.lucasferreiramachado.kapp.app.coordinators.deeplink.DeeplinkCoordinator
-import com.lucasferreiramachado.kapp.app.coordinators.deeplink.DeeplinkCoordinatorAction
+import com.lucasferreiramachado.kapp.features.coordinator.FeaturesCoordinatorAction
+import com.lucasferreiramachado.kapp.deeplink.coordinator.DeeplinkCoordinator
+import com.lucasferreiramachado.kapp.deeplink.coordinator.DeeplinkCoordinatorAction
 import com.lucasferreiramachado.kdeeplink.compose.handler.KDeeplinkHandler
 import com.lucasferreiramachado.kapp.deeplink.route.AppDeeplinkRoute
 

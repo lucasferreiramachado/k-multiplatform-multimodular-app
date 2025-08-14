@@ -1,4 +1,4 @@
-package com.lucasferreiramachado.kapp.app.coordinators.deeplink.domain.usecases
+package com.lucasferreiramachado.kapp.deeplink.domain.usecases
 
 import com.lucasferreiramachado.kapp.data.user.UserRepository
 import com.lucasferreiramachado.kapp.data.user.model.AuthenticatedUser

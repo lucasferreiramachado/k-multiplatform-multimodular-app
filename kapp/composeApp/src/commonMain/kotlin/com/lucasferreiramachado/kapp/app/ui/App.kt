@@ -1,10 +1,10 @@
-package com.lucasferreiramachado.kapp.app
+package com.lucasferreiramachado.kapp.app.ui
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import com.lucasferreiramachado.kapp.app.coordinators.app.AppCoordinator
-import com.lucasferreiramachado.kapp.app.coordinators.app.AppCoordinatorAction
-import com.lucasferreiramachado.kapp.app.coordinators.app.AppNavigationRoute
+import com.lucasferreiramachado.kapp.app.ui.coordinator.AppCoordinatorAction
+import com.lucasferreiramachado.kapp.app.ui.navigation.AppNavigationRoute
+import com.lucasferreiramachado.kapp.di.AppCoordinatorFactory
 
 @Composable
 fun App(
@@ -12,7 +12,7 @@ fun App(
     initialAction: AppCoordinatorAction = AppCoordinatorAction.StartLoginFlow,
 ) {
     MaterialTheme {
-        val appCoordinator = AppCoordinator()
+        val appCoordinator = AppCoordinatorFactory().create()
         appCoordinator.start(
             startDestination,
             initialAction = initialAction

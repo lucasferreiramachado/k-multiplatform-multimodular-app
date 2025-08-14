@@ -1,24 +1,16 @@
-package com.lucasferreiramachado.kapp.app.coordinators.features
+package com.lucasferreiramachado.kapp.features.coordinator
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import com.lucasferreiramachado.kapp.auth.AuthCoordinatorAction
+import com.lucasferreiramachado.kapp.auth.login.ui.coordinator.AuthCoordinatorAction
+import com.lucasferreiramachado.kapp.data.purchase.model.ShoppingCartProduct
+import com.lucasferreiramachado.kapp.deeplink.model.Product
+import com.lucasferreiramachado.kapp.home.coordinator.HomeCoordinatorAction
+import com.lucasferreiramachado.kapp.product.ProductsCoordinatorAction
 import com.lucasferreiramachado.kcoordinator.KCoordinator
 import com.lucasferreiramachado.kcoordinator.KCoordinatorAction
 import com.lucasferreiramachado.kcoordinator.compose.ComposeKCoordinator
-import com.lucasferreiramachado.kapp.deeplink.model.Product
-import com.lucasferreiramachado.kapp.home.HomeCoordinatorAction.ShowHomeScreen
-import com.lucasferreiramachado.kapp.product.ProductsCoordinatorAction
-import com.lucasferreiramachado.kapp.di.AuthCoordinatorFactory
-import com.lucasferreiramachado.kapp.di.HomeCoordinatorFactory
-import com.lucasferreiramachado.kapp.di.ProductsCoordinatorFactory
-import com.lucasferreiramachado.kapp.data.purchase.model.ShoppingCartProduct
 
-sealed class FeaturesNavigationRoute(val route: String) {
-    object Auth : FeaturesNavigationRoute("auth")
-    object Home : FeaturesNavigationRoute("main")
-    object Feature : FeaturesNavigationRoute("feature")
-}
 
 sealed class FeaturesCoordinatorAction: KCoordinatorAction {
     data object StartLoginFlow : FeaturesCoordinatorAction()
@@ -30,15 +22,13 @@ sealed class FeaturesCoordinatorAction: KCoordinatorAction {
 }
 
 class FeaturesCoordinator(
-    authCoordinatorFactory: AuthCoordinatorFactory = AuthCoordinatorFactory(),
-    homeCoordinatorFactory: HomeCoordinatorFactory = HomeCoordinatorFactory(),
-    productsCoordinatorFactory: ProductsCoordinatorFactory = ProductsCoordinatorFactory(),
+    val factory: FeaturesCoordinatorFactoryI,
     override val parent: KCoordinator<*>
 ) : ComposeKCoordinator <FeaturesCoordinatorAction> {
 
-    private val authCoordinator = authCoordinatorFactory.create(parent = this)
-    private val homeCoordinator = homeCoordinatorFactory.create(parent = this)
-    private val productsCoordinator = productsCoordinatorFactory.create(parent = this)
+    private val authCoordinator = factory.authCoordinatorFactory.create(parent = this)
+    private val homeCoordinator = factory.homeCoordinatorFactory.create(parent = this)
+    private val productsCoordinator = factory.productsCoordinatorFactory.create(parent = this)
 
     override fun handle(action: FeaturesCoordinatorAction) {
         when (action) {
@@ -51,7 +41,7 @@ class FeaturesCoordinator(
             }
             is FeaturesCoordinatorAction.StartHomeFlow -> {
                 val username = action.username
-                homeCoordinator.trigger(ShowHomeScreen(username = username))
+                homeCoordinator.trigger(HomeCoordinatorAction.ShowHomeScreen(username = username))
             }
             is FeaturesCoordinatorAction.StartProductListFlow -> {
                 productsCoordinator.trigger(ProductsCoordinatorAction.StartProductList)

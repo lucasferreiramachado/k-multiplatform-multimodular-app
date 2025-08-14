@@ -14,6 +14,8 @@ plugins {
 }
 
 kotlin {
+    withSourcesJar(publish = false)
+
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
