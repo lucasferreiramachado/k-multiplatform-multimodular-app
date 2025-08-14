@@ -3,7 +3,7 @@ package com.lucasferreiramachado.kapp.app.ui.screens.splash.composables
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.lucasferreiramachado.kapp.home.compose.app.ui.screens.splash.SplashViewModel
+import com.lucasferreiramachado.kapp.app.ui.screens.splash.SplashViewModel
 
 @Composable
 fun SplashScreen(
