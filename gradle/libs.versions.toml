@@ -21,6 +21,7 @@ kapp-data = "1.0.0"
 kapp-auth = "1.0.0"
 kapp-home = "1.0.0"
 kapp-product = "1.0.0"
+koin = "4.1.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -44,6 +45,10 @@ kapp-deeplink = { module = "io.github.lucasferreiramachado:kapp-deeplink", versi
 kapp-auth = { module = "io.github.lucasferreiramachado:kapp-auth", version.ref = "kapp-auth" }
 kapp-home = { module = "io.github.lucasferreiramachado:kapp-home", version.ref = "kapp-home" }
 kapp-product = { module = "io.github.lucasferreiramachado:kapp-product", version.ref = "kapp-product" }
+koin-android = {module = "io.insert-koin:koin-android", version.ref = "koin"}
+koin-compose-viewmodel = {module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin"}
+koin-compose-viewmodel-nav = {module = "io.insert-koin:koin-compose-viewmodel-navigation", version.ref = "koin"}
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -9,8 +9,8 @@ import com.lucasferreiramachado.kapp.data.product.FakeProductRepository
 import com.lucasferreiramachado.kapp.data.product.ProductRepository
 import com.lucasferreiramachado.kapp.data.purchase.FakePurchaseRepository
 import com.lucasferreiramachado.kapp.data.purchase.PurchaseRepository
+import com.lucasferreiramachado.kapp.data.user.FakeUserRepository
 import com.lucasferreiramachado.kapp.data.user.UserRepository
-import com.lucasferreiramachado.kapp.data.user.model.AuthenticatedUser
 import com.lucasferreiramachado.kapp.deeplink.coordinator.DeeplinkCoordinator
 import com.lucasferreiramachado.kapp.deeplink.coordinator.DeeplinkCoordinatorFactoryI
 import com.lucasferreiramachado.kapp.deeplink.domain.usecases.GetLoggedUserUseCase
@@ -30,19 +30,39 @@ import com.lucasferreiramachado.kapp.product.purchase.domain.usecases.StarNewPur
 import com.lucasferreiramachado.kapp.product.purchase.ui.coordinator.PurchaseProductCoordinator
 import com.lucasferreiramachado.kapp.product.purchase.ui.coordinator.PurchaseProductCoordinatorFactoryI
 import com.lucasferreiramachado.kcoordinator.KCoordinator
+import org.koin.core.module.Module
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.module
+
+val appModule: Module = module {
+    single<UserRepository> { FakeUserRepository() }
+    singleOf(::FakeProductRepository) { bind<ProductRepository>() }
+    single<PurchaseRepository> { FakePurchaseRepository(null) }
+
+    singleOf(::ProductListCoordinatorFactory) { bind<ProductListCoordinatorFactoryI>() }
+    singleOf(::PurchaseProductCoordinatorFactory) { bind<PurchaseProductCoordinatorFactoryI>() }
+    singleOf(::ProductsCoordinatorFactory) { bind<ProductsCoordinatorFactoryI>() }
+    singleOf(::HomeCoordinatorFactory) { bind<HomeCoordinatorFactoryI>() }
+    singleOf(::AuthCoordinatorFactory) { bind<AuthCoordinatorFactoryI>() }
+
+    singleOf(::DeeplinkCoordinatorFactory) { bind<DeeplinkCoordinatorFactoryI>() }
+    singleOf(::FeaturesCoordinatorFactory) { bind<FeaturesCoordinatorFactoryI>() }
+    singleOf(::AppCoordinatorFactory) { bind<AppCoordinatorFactoryI>() }
+}
 
 class AppCoordinatorFactory(
-    override val featuresCoordinatorFactory: FeaturesCoordinatorFactoryI = KappFeaturesCoordinatorFactory(),
-    override val deeplinkCoordinatorFactory: DeeplinkCoordinatorFactoryI = KappDeeplinkCoordinatorFactory()
+    override val featuresCoordinatorFactory: FeaturesCoordinatorFactoryI,
+    override val deeplinkCoordinatorFactory: DeeplinkCoordinatorFactoryI
 ): AppCoordinatorFactoryI{
-
     override fun create(): AppCoordinator = AppCoordinator(factory = this)
 }
 
-private class KappFeaturesCoordinatorFactory(
-    override val authCoordinatorFactory: AuthCoordinatorFactoryI = KappAuthCoordinatorFactory(),
-    override val homeCoordinatorFactory: HomeCoordinatorFactoryI = KappHomeCoordinatorFactory(),
-    override val productsCoordinatorFactory: ProductsCoordinatorFactoryI = KappProductsCoordinatorFactory()
+
+class FeaturesCoordinatorFactory(
+    override val authCoordinatorFactory: AuthCoordinatorFactoryI,
+    override val homeCoordinatorFactory: HomeCoordinatorFactoryI,
+    override val productsCoordinatorFactory: ProductsCoordinatorFactoryI
 ): FeaturesCoordinatorFactoryI {
     override fun create(parent: KCoordinator<*>): FeaturesCoordinator {
         return FeaturesCoordinator(
@@ -52,11 +72,12 @@ private class KappFeaturesCoordinatorFactory(
     }
 }
 
-private class KappDeeplinkCoordinatorFactory(
-    override val getLoggedUserUseCase: GetLoggedUserUseCase = GetLoggedUserUseCase(
-        KappUserRepositoryFactory.create()
-    )
+private class DeeplinkCoordinatorFactory(
+    repository: UserRepository,
 ): DeeplinkCoordinatorFactoryI {
+    override val getLoggedUserUseCase: GetLoggedUserUseCase = GetLoggedUserUseCase(
+        repository
+    )
     override fun create(parent: FeaturesCoordinator): DeeplinkCoordinator {
         return DeeplinkCoordinator(
             this,
@@ -65,7 +86,7 @@ private class KappDeeplinkCoordinatorFactory(
     }
 }
 
-private class KappHomeCoordinatorFactory(): HomeCoordinatorFactoryI {
+private class HomeCoordinatorFactory(): HomeCoordinatorFactoryI {
     override fun create(
         parent: KCoordinator<*>,
     ): HomeCoordinator = HomeCoordinator(
@@ -74,11 +95,13 @@ private class KappHomeCoordinatorFactory(): HomeCoordinatorFactoryI {
     )
 }
 
-private class  KappAuthCoordinatorFactory(
-    override val authenticateUserUseCase: AuthenticateUserUseCase = AuthenticateUserUseCase(
-        repository = KappUserRepositoryFactory.create()
-    ),
+private class AuthCoordinatorFactory(
+    repository: UserRepository,
 ) : AuthCoordinatorFactoryI {
+    override val authenticateUserUseCase: AuthenticateUserUseCase = AuthenticateUserUseCase(
+        repository = repository
+    )
+
     override fun create(
         parent: KCoordinator<*>,
     ): AuthCoordinator = AuthCoordinator(
@@ -87,26 +110,11 @@ private class  KappAuthCoordinatorFactory(
     )
 }
 
-private object PurchaseRepositoryFactory {
-    private val repository: PurchaseRepository = FakePurchaseRepository()
-
-    fun create(): PurchaseRepository {
-        return repository
-    }
-}
-
-private class ProductRepositoryFactory {
-    private val repository: ProductRepository = FakeProductRepository()
-
-    fun create(): ProductRepository {
-        return repository
-    }
-}
-
-private class KappProductsCoordinatorFactory(
-    override val purchaseProductCoordinatorFactory: PurchaseProductCoordinatorFactoryI = KappPurchaseProductCoordinatorFactory(),
-    override val productListCoordinatorFactory: ProductListCoordinatorFactoryI = KappProductListCoordinatorFactory(),
+private class ProductsCoordinatorFactory(
+    override val purchaseProductCoordinatorFactory: PurchaseProductCoordinatorFactoryI,
+    override val productListCoordinatorFactory: ProductListCoordinatorFactoryI,
 ) : ProductsCoordinatorFactoryI {
+
     override fun create(
         parent: KCoordinator<*>
     ): ProductsCoordinator {
@@ -117,8 +125,22 @@ private class KappProductsCoordinatorFactory(
     }
 }
 
-private class KappPurchaseProductCoordinatorFactory(
-    purchaseRepository: PurchaseRepository = PurchaseRepositoryFactory.create()
+private class ProductListCoordinatorFactory(
+    val productRepository: ProductRepository,
+): ProductListCoordinatorFactoryI {
+    override val getProductsUseCase: GetProductsUseCase = GetProductsUseCase(
+        productRepository
+    )
+    override fun create(
+        parent: KCoordinator<*>
+    ): ProductListCoordinator = ProductListCoordinator(
+        this,
+        parent
+    )
+}
+
+private class PurchaseProductCoordinatorFactory(
+    purchaseRepository: PurchaseRepository
 ): PurchaseProductCoordinatorFactoryI {
 
     override val setPurchasePaymentMethodUseCase: SetPurchasePaymentMethodUseCase = SetPurchasePaymentMethodUseCase(purchaseRepository)
@@ -132,46 +154,4 @@ private class KappPurchaseProductCoordinatorFactory(
         factory = this,
         parent
     )
-}
-
-private class KappProductListCoordinatorFactory(
-    productRepository: ProductRepository = ProductRepositoryFactory().create()
-): ProductListCoordinatorFactoryI {
-
-    override val getProductsUseCase: GetProductsUseCase = GetProductsUseCase(
-        productRepository
-    )
-
-    override fun create(
-        parent: KCoordinator<*>
-    ): ProductListCoordinator = ProductListCoordinator(
-        this,
-        parent
-    )
-}
-
-private object KappUserRepositoryFactory {
-    private val repository: UserRepository = KappUserRepository()
-
-    fun create(): UserRepository {
-        return repository
-    }
-}
-private class KappUserRepository(
-    private var authenticatedUser: AuthenticatedUser? = null
-): UserRepository {
-
-    override fun authenticate(
-        username: String,
-        password: String,
-    ): AuthenticatedUser? {
-        authenticatedUser = AuthenticatedUser(
-            id = "123",
-            username = username,
-            name = "{user's firstname}"
-        )
-        return authenticatedUser
-    }
-
-    override fun loggedUser(): AuthenticatedUser? = authenticatedUser
 }
