@@ -13,6 +13,8 @@ plugins {
     alias(libs.plugins.kotlinxSerialization)
 }
 
+val useLocalModules = false
+
 kotlin {
     withSourcesJar(publish = false)
 
@@ -86,9 +88,15 @@ kotlin {
             implementation(libs.kapp.data.product)
             implementation(libs.kapp.data.purchase)
 
-            implementation(libs.kapp.auth)
-            implementation(libs.kapp.product)
-            implementation(libs.kapp.home)
+            if (useLocalModules) {
+                implementation(project(":kapp-auth:kapp-auth-core"))
+                implementation(project(":kapp-home:kapp-home-core"))
+                implementation(project(":kapp-product:kapp-product-core"))
+            } else {
+                 implementation(libs.kapp.product)
+                 implementation(libs.kapp.auth)
+                 implementation(libs.kapp.home)
+            }
 
             implementation(libs.kdeeplink)
             implementation(libs.kdeeplink.navigation.compose)
@@ -118,7 +126,7 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.1.0"
     }
     packaging {
         resources {
@@ -147,7 +155,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.lucasferreiramachado.kapp.desktop"
-            packageVersion = "1.0.0"
+            packageVersion = "1.1.0"
         }
     }
 }

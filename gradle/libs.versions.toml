@@ -17,9 +17,9 @@ kcoordinator = "1.1.0"
 kdeeplink = "0.3.0"
 kapp-deeplink = "1.0.0"
 kapp-data = "1.0.0"
-kapp-auth = "1.0.0"
-kapp-home = "1.0.0"
-kapp-product = "1.0.0"
+kapp-auth = "1.1.0"
+kapp-home = "1.1.0"
+kapp-product = "1.1.0"
 koin = "4.1.0"
 
 [libraries]
@@ -42,6 +42,7 @@ kapp-data-purchase = { module = "io.github.lucasferreiramachado:kapp-data-purcha
 kapp-data-product = { module = "io.github.lucasferreiramachado:kapp-data-product", version.ref = "kapp-data" }
 kapp-deeplink = { module = "io.github.lucasferreiramachado:kapp-deeplink", version.ref = "kapp-deeplink" }
 kapp-auth = { module = "io.github.lucasferreiramachado:kapp-auth", version.ref = "kapp-auth" }
+kapp-home = { module = "io.github.lucasferreiramachado:kapp-home", version.ref = "kapp-home" }
 kapp-product = { module = "io.github.lucasferreiramachado:kapp-product", version.ref = "kapp-product" }
 koin-android = {module = "io.insert-koin:koin-android", version.ref = "koin"}
 koin-compose-viewmodel-nav = {module = "io.insert-koin:koin-compose-viewmodel-navigation", version.ref = "koin"}

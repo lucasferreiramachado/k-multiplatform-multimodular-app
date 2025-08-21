@@ -28,4 +28,7 @@ dependencyResolutionManagement {
     }
 }
 
+include(":kapp-product:kapp-product-core")
+include(":kapp-home:kapp-home-core")
+include(":kapp-auth:kapp-auth-core")
 include(":kapp:composeApp")
