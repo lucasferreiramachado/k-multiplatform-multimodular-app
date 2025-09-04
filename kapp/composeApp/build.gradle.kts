@@ -83,19 +83,26 @@ kotlin {
             implementation(libs.material.icons.core)
             implementation(libs.material.icons.extended)
 
-            implementation(libs.kapp.deeplink)
-            implementation(libs.kapp.data.user)
-            implementation(libs.kapp.data.product)
-            implementation(libs.kapp.data.purchase)
-
             if (useLocalModules) {
                 implementation(project(":kapp-auth:kapp-auth-core"))
                 implementation(project(":kapp-home:kapp-home-core"))
                 implementation(project(":kapp-product:kapp-product-core"))
+
+                implementation(project("::kapp-deeplink:kapp-deeplink-core"))
+
+                implementation(project(":kapp-data:kapp-data-user"))
+                implementation(project(":kapp-data:kapp-data-product"))
+                implementation(project(":kapp-data:kapp-data-purchase"))
             } else {
                  implementation(libs.kapp.product)
                  implementation(libs.kapp.auth)
                  implementation(libs.kapp.home)
+
+                implementation(libs.kapp.deeplink)
+
+                 implementation(libs.kapp.data.user)
+                 implementation(libs.kapp.data.product)
+                 implementation(libs.kapp.data.purchase)
             }
 
             implementation(libs.kdeeplink)
