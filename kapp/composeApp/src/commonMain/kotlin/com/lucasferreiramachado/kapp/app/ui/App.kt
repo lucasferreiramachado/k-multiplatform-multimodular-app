@@ -2,9 +2,9 @@ package com.lucasferreiramachado.kapp.app.ui
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import com.lucasferreiramachado.kapp.app.ui.coordinator.AppCoordinator
 import com.lucasferreiramachado.kapp.app.ui.coordinator.AppCoordinatorAction
 import com.lucasferreiramachado.kapp.app.ui.navigation.AppNavigationRoute
-import com.lucasferreiramachado.kapp.di.AppCoordinatorFactory
 import com.lucasferreiramachado.kapp.di.KoinApp
 import org.koin.compose.KoinMultiplatformApplication
 import org.koin.compose.koinInject
@@ -18,7 +18,7 @@ fun App(
 ) {
     KoinMultiplatformApplication(KoinApp) {
         MaterialTheme {
-            val appCoordinator = koinInject<AppCoordinatorFactory>().create()
+            val appCoordinator = koinInject<AppCoordinator>()
             appCoordinator.start(
                 startDestination,
                 initialAction = initialAction

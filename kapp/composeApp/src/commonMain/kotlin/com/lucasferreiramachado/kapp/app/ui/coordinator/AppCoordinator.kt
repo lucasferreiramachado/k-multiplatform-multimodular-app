@@ -6,20 +6,24 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.lucasferreiramachado.kapp.app.ui.navigation.splashNavigation
+import com.lucasferreiramachado.kapp.deeplink.coordinator.DeeplinkCoordinator
+import com.lucasferreiramachado.kapp.features.coordinator.FeaturesCoordinator
 import com.lucasferreiramachado.kapp.features.coordinator.FeaturesCoordinatorAction
 import com.lucasferreiramachado.kcoordinator.KCoordinator
 import com.lucasferreiramachado.kcoordinator.compose.RootComposeKCoordinator
 import com.lucasferreiramachado.kdeeplink.compose.external.listenExternalUriDeeplink
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
 
 class AppCoordinator(
-    val factory: AppCoordinatorFactoryI,
     override val parent: KCoordinator<*>? = null
-) : RootComposeKCoordinator<AppCoordinatorAction> {
+) : RootComposeKCoordinator<AppCoordinatorAction>, KoinComponent {
 
     private var navHostController: NavHostController? = null
     private var initialAction: AppCoordinatorAction? = null
-    private var featuresCoordinator = factory.featuresCoordinatorFactory.create(parent = this)
-    private var deeplinkCoordinator = factory.deeplinkCoordinatorFactory.create(parent = featuresCoordinator)
+    private val featuresCoordinator: FeaturesCoordinator by inject { parametersOf(this) }
+    private val deeplinkCoordinator: DeeplinkCoordinator by inject { parametersOf(featuresCoordinator) }
 
     override fun handle(action: AppCoordinatorAction) {
         when (action) {

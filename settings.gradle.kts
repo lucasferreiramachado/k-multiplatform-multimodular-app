@@ -28,4 +28,14 @@ dependencyResolutionManagement {
     }
 }
 
+//include(":kapp-product:kapp-product-core")
+//include(":kapp-home:kapp-home-core")
+//include(":kapp-auth:kapp-auth-core")
+
+//include(":kapp-deeplink:kapp-deeplink-core")
+
+//include(":kapp-data:kapp-data-user")
+//include(":kapp-data:kapp-data-product")
+//include(":kapp-data:kapp-data-purchase")
+
 include(":kapp:composeApp")

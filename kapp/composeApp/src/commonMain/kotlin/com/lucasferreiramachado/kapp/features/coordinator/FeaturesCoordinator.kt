@@ -2,33 +2,26 @@ package com.lucasferreiramachado.kapp.features.coordinator
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import com.lucasferreiramachado.kapp.auth.login.ui.coordinator.AuthCoordinator
 import com.lucasferreiramachado.kapp.auth.login.ui.coordinator.AuthCoordinatorAction
 import com.lucasferreiramachado.kapp.data.purchase.model.ShoppingCartProduct
-import com.lucasferreiramachado.kapp.deeplink.model.Product
+import com.lucasferreiramachado.kapp.home.coordinator.HomeCoordinator
 import com.lucasferreiramachado.kapp.home.coordinator.HomeCoordinatorAction
+import com.lucasferreiramachado.kapp.product.ProductsCoordinator
 import com.lucasferreiramachado.kapp.product.ProductsCoordinatorAction
 import com.lucasferreiramachado.kcoordinator.KCoordinator
-import com.lucasferreiramachado.kcoordinator.KCoordinatorAction
 import com.lucasferreiramachado.kcoordinator.compose.ComposeKCoordinator
-
-
-sealed class FeaturesCoordinatorAction: KCoordinatorAction {
-    data object StartLoginFlow : FeaturesCoordinatorAction()
-    data class StartHomeFlow(val username: String) : FeaturesCoordinatorAction()
-    data object StartProductListFlow : FeaturesCoordinatorAction()
-    data class AuthenticateUserAndTriggerAction(val action: FeaturesCoordinatorAction) : FeaturesCoordinatorAction()
-    data class ProductDetailFlow(val product: Product) : FeaturesCoordinatorAction()
-    data class BuyProductFlow(val product: Product) : FeaturesCoordinatorAction()
-}
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
 
 class FeaturesCoordinator(
-    val factory: FeaturesCoordinatorFactoryI,
     override val parent: KCoordinator<*>
-) : ComposeKCoordinator <FeaturesCoordinatorAction> {
+) : ComposeKCoordinator <FeaturesCoordinatorAction>, KoinComponent {
 
-    private val authCoordinator = factory.authCoordinatorFactory.create(parent = this)
-    private val homeCoordinator = factory.homeCoordinatorFactory.create(parent = this)
-    private val productsCoordinator = factory.productsCoordinatorFactory.create(parent = this)
+    private val authCoordinator: AuthCoordinator by inject { parametersOf(this) }
+    private val homeCoordinator: HomeCoordinator by inject { parametersOf(this) }
+    private val productsCoordinator: ProductsCoordinator by inject { parametersOf(this) }
 
     override fun handle(action: FeaturesCoordinatorAction) {
         when (action) {

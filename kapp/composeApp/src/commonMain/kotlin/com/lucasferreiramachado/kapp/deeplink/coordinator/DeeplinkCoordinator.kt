@@ -2,6 +2,7 @@ package com.lucasferreiramachado.kapp.deeplink.coordinator
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import com.lucasferreiramachado.kapp.deeplink.domain.usecases.GetLoggedUserUseCase
 import com.lucasferreiramachado.kapp.deeplink.handlers.auth.AuthLoginDeeplinkHandler
 import com.lucasferreiramachado.kapp.deeplink.handlers.products.ProductDetailsByProductDeeplinkHandler
 import com.lucasferreiramachado.kapp.deeplink.handlers.products.ProductsDeeplinkHandler
@@ -9,11 +10,15 @@ import com.lucasferreiramachado.kapp.features.coordinator.FeaturesCoordinator
 import com.lucasferreiramachado.kapp.features.coordinator.FeaturesCoordinatorAction
 import com.lucasferreiramachado.kcoordinator.compose.ComposeKCoordinator
 import com.lucasferreiramachado.kdeeplink.compose.handler.KDeeplinkHandler
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
+import kotlin.getValue
 
 class DeeplinkCoordinator(
-    val factory: DeeplinkCoordinatorFactoryI,
     override val parent: FeaturesCoordinator,
-) : ComposeKCoordinator<DeeplinkCoordinatorAction> {
+) : ComposeKCoordinator<DeeplinkCoordinatorAction>, KoinComponent {
+    private val getLoggedUserUseCase: GetLoggedUserUseCase by inject { parametersOf(this) }
     private val deeplinkHandlers: List<KDeeplinkHandler> = listOf<KDeeplinkHandler>(
         ProductDetailsByProductDeeplinkHandler(this),
         ProductsDeeplinkHandler(this),
@@ -34,7 +39,7 @@ class DeeplinkCoordinator(
         navHostController?.popBackStack()
         when (action) {
             is DeeplinkCoordinatorAction.ProcessDeeplink -> {
-                val isNotLogged = factory.getLoggedUserUseCase.execute() == null
+                val isNotLogged = getLoggedUserUseCase.execute() == null
                 if (action.deeplink.needsAuthentication.and(isNotLogged)) {
                     featuresCoordinator.trigger(
                         FeaturesCoordinatorAction.AuthenticateUserAndTriggerAction(action.runAction))
